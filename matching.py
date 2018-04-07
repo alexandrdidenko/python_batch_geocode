@@ -1,27 +1,31 @@
+import csv
 import math
+import time
+
 
 # pi - число pi, rad - радиус сферы (Земли)
 rad = 6372795
+input_filename_effes = 'pocs_test_result.csv'
+input_filename_inbev = 'UA_pocs_SW_test.csv'
+output_filename = 'pocs_matching_test.csv'
+distance_limit = 50
+TIMEOUT = 0
 
-active = (
-    ('''"Коротенко Мелитополь";on-trade;101140000001824;2017''', 46.297906, 35.305783),
-    ('''"Коротенко Мелитополь";off-trade;101140000001885;2017''', 46.297947, 35.305533),
-    )
 
-pasive = (
-    ('''"Караван-Сарай Краматорск";off-trade;1010703644;2012''', 49.19101, 37.515147),
-    ('''"Караван-Сарай Краматорск";off-trade;1010705815;2016''', 49.191104, 37.51574),
-    ('''"Караван-Сарай Краматорск";off-trade;1010700319;2012''', 49.206317, 37.59614)
-    )
+def csv_read(filename):
+    with open(filename, 'r', encoding="utf-8") as fp:
+        reader = csv.reader(fp, delimiter=',', quotechar="'")
+        data_read = [row for row in reader]
+    return data_read
 
 
 def dist(p1, p2):
     # координаты двух точек
-    llat1 = p1[1]
-    llong1 = p1[2]
+    llat1 = float(p1[1])
+    llong1 = float(p1[2])
 
-    llat2 = p2[1]
-    llong2 = p2[2]
+    llat2 = float(p2[1])
+    llong2 = float(p2[2])
 
     # в радианах
     lat1 = llat1 * math.pi / 180.
@@ -45,14 +49,38 @@ def dist(p1, p2):
     dist = ad * rad
     return dist
 
-check = 0
-count2 = 0
 
-for first in range(len(active)):
-    for second in range(len(pasive)):
-        count2 = count2 + 1
-        distance = dist(active[first], pasive[second])
-        # print(first, second)
-        if distance <= 10:
-            check = check + 1
-            print(count2,";",active[first][0], ";", pasive[second][0], ";", distance, ";check - ", check)
+def match(all_inbev, all_effes):
+    result = []
+    count = 0
+    for effes in all_effes:
+        res = []
+        for inbev in all_inbev:
+            try:
+                distance = dist(inbev, effes)
+            except ValueError:
+                continue
+            if distance <= distance_limit:
+                res.append(effes[0])
+                res.append(inbev[0])
+                result.append(res)
+                print('итерация - {} совпадений - {}'.format(count, len(result)))
+
+            time.sleep(TIMEOUT)
+
+        count += 1
+    return result
+
+
+def write_file(text):
+    with open('pocs_matching_test.csv', "w", newline="", encoding="utf-8", ) as file:
+        writer = csv.writer(file)
+        # writer.writerows([['id', 'Ol_id_inbev'], ])
+        writer.writerows(text)
+    return None
+
+
+all_inbev = csv_read(input_filename_inbev)[1:]
+all_effes = csv_read(input_filename_effes)[1:]
+# after_mach = match(all_inbev, all_effes)
+write_file(match(all_inbev, all_effes))
