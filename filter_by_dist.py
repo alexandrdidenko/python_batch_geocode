@@ -10,14 +10,22 @@ def csv_read(filename):
         data_read = [row for row in reader]
     return data_read
 
+
+def comparisons(pocs):
+    res = []
+
+    return res
+
+
+
+def write_file(text):
+    with open(output_filename, "w", newline="", encoding="utf-8", ) as file:
+        writer = csv.writer(file)
+        writer.writerows([['id', 'Ol_id_inbev', 'distance'], ])
+        writer.writerows(text)
+    return None
+
+
 all_pocs = csv_read(input_filename)
-
-resutl = []
-for poc in all_pocs[1:]:
-
-    res = poc
-    curent_poc = poc[0]
-    dist = poc[2]
-    for poc2 in all_pocs[1:]:
-        if poc2[0] == curent_poc and poc[2] < dist:
-            res = poc2
+comparison = comparisons(all_pocs)
+write_file(comparison)
