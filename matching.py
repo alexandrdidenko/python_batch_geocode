@@ -5,9 +5,9 @@ import time
 
 # pi - число pi, rad - радиус сферы (Земли)
 rad = 6372795
-input_filename_effes = 'pocs_test_result.csv'
-input_filename_inbev = 'UA_pocs_SW_test.csv'
-output_filename = 'pocs_matching_test.csv'
+input_filename_effes = 'UA_poc_effes.csv'
+input_filename_inbev = 'UA_pocs_SW.csv'
+output_filename = 'pocs_matching_inbev-effes.csv'
 distance_limit = 50
 TIMEOUT = 0
 
@@ -54,17 +54,19 @@ def match(all_inbev, all_effes):
     result = []
     count = 0
     for effes in all_effes:
-        res = []
+
         for inbev in all_inbev:
+            res = []
             try:
                 distance = dist(inbev, effes)
             except ValueError:
                 continue
-            if distance <= distance_limit:
+            if distance > 0 and distance <= distance_limit:
                 res.append(effes[0])
                 res.append(inbev[0])
+                res.append(distance)
                 result.append(res)
-                print('итерация - {} совпадений - {}'.format(count, len(result)))
+                print('итерация - {} совпадений - {} расстояние - {}'.format(count, len(result), distance))
 
             time.sleep(TIMEOUT)
 
@@ -73,9 +75,9 @@ def match(all_inbev, all_effes):
 
 
 def write_file(text):
-    with open('pocs_matching_test.csv', "w", newline="", encoding="utf-8", ) as file:
+    with open(output_filename, "w", newline="", encoding="utf-8", ) as file:
         writer = csv.writer(file)
-        # writer.writerows([['id', 'Ol_id_inbev'], ])
+        # writer.writerows([['id', 'Ol_id_inbev','distance'], ])
         writer.writerows(text)
     return None
 

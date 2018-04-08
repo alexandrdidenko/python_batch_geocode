@@ -7,7 +7,7 @@ import csv
 API_KEY = 'AIzaSyAqSX2KdlYt-PqLQEfB20q1D7sBXmPSQnU'
 
 FILENAME = 'pocs_test_result.csv'
-TIMEOUT = 0.5
+TIMEOUT = 0.3
 input_filename = "pocs_test.csv"
 
 
@@ -29,15 +29,20 @@ def address_convert(address):
 
 def pars_file(one_poc):
     res = []
-    # geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=% s &region=ua&key=AIzaSyAqSX2KdlYt-PqLQEfB20q1D7sBXmPSQnU" % \
-    geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=% s" % one_poc[1]
+    # geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=% s &region=ua&key=AIzaSyBgpO0hfoepW0eTp2vaRnYIhosbPnKKl1E" % one_poc[1]
+    # geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=% s" % one_poc[1]
+    # geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address={}".format(one_poc[1])
+    geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s" % (one_poc[1], API_KEY)
     # print(geocode_url)
     results = requests.get(geocode_url)
     results = results.json()
 
     if len(results['results']) == 0:
-        geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=% s" % one_poc[2]
+        # geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=% s &region=ua&key=AIzaSyBgpO0hfoepW0eTp2vaRnYIhosbPnKKl1E" % \
+        #               one_poc[2]
+        # geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address={}".format(one_poc[2])
         # print(geocode_url)
+        geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s" % (one_poc[2], API_KEY)
         results = requests.get(geocode_url)
         results = results.json()
         if len(results['results']) == 0:
