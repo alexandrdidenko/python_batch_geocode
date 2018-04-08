@@ -7,7 +7,7 @@ import csv
 API_KEY = 'AIzaSyAqSX2KdlYt-PqLQEfB20q1D7sBXmPSQnU'
 
 FILENAME = 'pocs_test_result.csv'
-TIMEOUT = 0
+TIMEOUT = 0.5
 input_filename = "pocs_test.csv"
 
 
@@ -29,25 +29,39 @@ def address_convert(address):
 
 def pars_file(one_poc):
     res = []
-    geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=% s &region=ua&key=AIzaSyBgpO0hfoepW0eTp2vaRnYIhosbPnKKl1E" % \
-                  one_poc[1]
+    # geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=% s &region=ua&key=AIzaSyAqSX2KdlYt-PqLQEfB20q1D7sBXmPSQnU" % \
+    geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=% s" % one_poc[1]
     # print(geocode_url)
     results = requests.get(geocode_url)
     results = results.json()
 
     if len(results['results']) == 0:
-        lat = None
-        lon = None
+        geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address=% s" % one_poc[2]
+        # print(geocode_url)
+        results = requests.get(geocode_url)
+        results = results.json()
+        if len(results['results']) == 0:
+            lat = None
+            lon = None
+            found_address = one_poc[1]
+        else:
+            answer = results['results'][0]
+            lat = answer.get('geometry').get('location').get('lat')
+            lon = answer.get('geometry').get('location').get('lng')
+            found_address = one_poc[2]
     else:
         answer = results['results'][0]
         lat = answer.get('geometry').get('location').get('lat')
         lon = answer.get('geometry').get('location').get('lng')
+        found_address = one_poc[1]
 
     res.append(one_poc[0])
     res.append(lat)
     res.append(lon)
-    res.append(one_poc[1])
+    res.append(found_address)
+
     time.sleep(TIMEOUT)
+
     return res
 
 
