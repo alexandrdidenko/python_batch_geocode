@@ -2,23 +2,23 @@ import classes
 from tqdm import tqdm
 import time
 import requests
-import csv
-import openpyxl
 
 API_KEY = 'AIzaSyBiO44jrglBDqWVQLrdPCedfqtax4HrwjQ'
-FILENAME = r'C:\Users\36004642\PycharmProjects\batch_geocode\pocs_address_result.xlsx'
+FILENAME = r'pocs_address_result.xlsx'
+INPUT_FILENAME = r'pocs_address.xlsx'
 TIMEOUT = 0.3
-# INPUT_FILENAME = "pocs_address.csv"
-INPUT_FILENAME = r'C:\Users\36004642\PycharmProjects\batch_geocode\pocs_address.xlsx'
 
 
 def xls_read(filename):
+    """Конвертуємо дані з екселю в словник"""
     employees_sheet = classes.ExcelWorkbook(filename=filename)
     res = employees_sheet.read()
     return res
 
 
 def address_convert(address):
+    """Конвертуємо адресу в координати"""
+    print(address_convert.__doc__)
     parse_pocs = []
     len_rows = len(address)
 
@@ -39,30 +39,31 @@ def pars_file(one_poc):
     if len(results['results']) == 0:
         lat = None
         lon = None
-        found_address = one_poc[1]
+        address = one_poc[1]
+        found_address = None
     else:
         answer = results['results'][0]
         lat = answer.get('geometry').get('location').get('lat')
         lon = answer.get('geometry').get('location').get('lng')
+        address = one_poc[1]
         found_address = answer.get('formatted_address')
 
     res.append(one_poc[0])
+    res.append(address)
+    res.append(found_address)
     res.append(lat)
     res.append(lon)
-    res.append(found_address)
 
     time.sleep(TIMEOUT)
     return res
 
 
 def write_xls(text, file):
-    """
-    Записуємо результат у файл
-    """
+    """Записуємо результат у файл"""
     my_file = classes.ExcelWorkbook(filename=file)
     wb = my_file.create()
-    title = 'test'
-    column_sheet = ['id', 'lat', 'lon', 'address']
+    title = 'found_address'
+    column_sheet = ['id', 'address', 'found_address', 'lat', 'lon']
     rows = text
     if rows == "Error: unable to fetch data" or len(rows) == 0:  # Если ошибка или пусто
         return None
