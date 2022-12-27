@@ -6,9 +6,9 @@ import csv
 # API_KEY = 'AIzaSyBgpO0hfoepW0eTp2vaRnYIhosbPnKKl1E'
 API_KEY = 'AIzaSyBiO44jrglBDqWVQLrdPCedfqtax4HrwjQ'
 
-FILENAME = 'pocs_test_result.csv'
+FILENAME = 'pocs_adress_result.csv'
 TIMEOUT = 0.3
-input_filename = "pocs_test.csv"
+input_filename = "pocs_adress.csv"
 
 
 def csv_read(filename):
