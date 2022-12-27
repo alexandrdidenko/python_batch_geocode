@@ -3,18 +3,19 @@ from tqdm import tqdm
 import time
 import requests
 import csv
+import openpyxl
 
 API_KEY = 'AIzaSyBiO44jrglBDqWVQLrdPCedfqtax4HrwjQ'
-FILENAME = r'C:\Users\36004642\PycharmProjects\batch_geocode\pocs_adress_result.csv.xlsx'
+FILENAME = r'C:\Users\36004642\PycharmProjects\batch_geocode\pocs_address_result.xlsx'
 TIMEOUT = 0.3
-INPUT_FILENAME = "pocs_address.csv"
+# INPUT_FILENAME = "pocs_address.csv"
+INPUT_FILENAME = r'C:\Users\36004642\PycharmProjects\batch_geocode\pocs_address.xlsx'
 
 
-def csv_read(filename):
-    with open(filename, 'r', encoding="utf-8") as fp:
-        reader = csv.reader(fp, delimiter=';', quotechar="'")
-        data_read = [row for row in reader]
-    return data_read
+def xls_read(filename):
+    employees_sheet = classes.ExcelWorkbook(filename=filename)
+    res = employees_sheet.read()
+    return res
 
 
 def address_convert(address):
@@ -74,6 +75,6 @@ def write_xls(text, file):
 
 
 if __name__ == '__main__':
-    my_file = csv_read(INPUT_FILENAME)
+    my_file = xls_read(INPUT_FILENAME)
     my_text = address_convert(my_file[1:])
     write_xls(text=my_text, file=FILENAME)

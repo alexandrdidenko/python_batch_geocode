@@ -1,6 +1,5 @@
 import multiprocessing
 
-
 import openpyxl
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Font
 from openpyxl.utils import get_column_letter
@@ -24,6 +23,21 @@ class ExcelWorkbook:
         """Сохранить файл excel"""
         print(ExcelWorkbook.save.__doc__)
         wb.save(filename=self.filename)
+
+    def read(self):
+        """Відкриваємо файл та зчитуємо дані в словник"""
+        print(ExcelWorkbook.read.__doc__)
+        excel_file = openpyxl.load_workbook(self.filename)
+        employees_sheet = excel_file.active
+        res = []
+
+        for mr in range(1, employees_sheet.max_row + 1):
+            rr = []
+            for x in range(1, employees_sheet.max_column + 1):
+                r = employees_sheet.cell(row=mr, column=x).value
+                rr.append(r)
+            res.append(rr)
+        return res
 
 
 class ExcelSheet:
@@ -116,11 +130,11 @@ class ExcelSheet:
 
         # выравнивание по центру в строках
         alignment_center = Alignment(horizontal='center',
-                              vertical='center',
-                              text_rotation=0,
-                              wrap_text=False,
-                              shrink_to_fit=False,
-                              indent=0)
+                                     vertical='center',
+                                     text_rotation=0,
+                                     wrap_text=False,
+                                     shrink_to_fit=False,
+                                     indent=0)
 
         # заполняем шапку
         c = 1
@@ -138,8 +152,8 @@ class ExcelSheet:
 
         for i in tqdm(range(len_rows), colour='green'):  # цикл который рисует прогресбар
             row = self.all_rows[i]
-        # for row in self.all_rows:  # старый цикл до того как сделал прогрес бар
-        #     print(str(r) + ' из ' + str(len_rows))
+            # for row in self.all_rows:  # старый цикл до того как сделал прогрес бар
+            #     print(str(r) + ' из ' + str(len_rows))
             c = 1
             for col in row:
                 if c in self.num:
