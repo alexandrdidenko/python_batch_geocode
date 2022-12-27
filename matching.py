@@ -7,8 +7,8 @@ import time
 rad = 6372795
 input_filename_effes = 'UA_poc_effes.csv'
 input_filename_inbev = 'UA_pocs_SW.csv'
-output_filename = 'pocs_matching_inbev-effes.csv'
-distance_limit = 50
+output_filename = 'pocs_matching_inbev-effes2.csv'
+distance_limit = 100
 TIMEOUT = 0
 
 

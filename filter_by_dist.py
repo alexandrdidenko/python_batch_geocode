@@ -12,7 +12,20 @@ def csv_read(filename):
 
 
 def comparisons(pocs):
-    res = []
+    result = []
+    result.append(pocs[1])
+    for poc in pocs:
+        # if len(result) == 0:
+        #     result.append(poc)
+        #     continue
+        for res in result:
+            if poc[0] == res[0]:
+                if poc[2] < res[2]:
+                    result.remove()
+                    result.append(poc)
+        result.append(poc)
+
+
 
     return res
 
