@@ -3,7 +3,7 @@ from tqdm import tqdm
 import time
 import requests
 
-API_KEY = 'AIzaSyBiO44jrglBDqWVQLrdPCedfqtax4HrwjQ'
+API_KEY = 'AIzaSyCuh0ZoaF4m71WkmjA0ZfD7NduAuZ7W5z8'
 FILENAME = r'pocs_address_result.xlsx'
 INPUT_FILENAME = r'pocs_address.xlsx'
 TIMEOUT = 0.3
@@ -35,6 +35,7 @@ def pars_file(one_poc):
         adr=one_poc[1], apy=API_KEY)
     results = requests.get(geocode_url)
     results = results.json()
+    # print(geocode_url)
 
     if len(results['results']) == 0:
         lat = None
@@ -53,7 +54,6 @@ def pars_file(one_poc):
     res.append(found_address)
     res.append(lat)
     res.append(lon)
-
     time.sleep(TIMEOUT)
     return res
 
