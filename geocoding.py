@@ -35,23 +35,46 @@ def pars_file(one_poc):
         adr=one_poc[1], apy=API_KEY)
     results = requests.get(geocode_url)
     results = results.json()
-    # print(geocode_url)
+    print(geocode_url)
 
     if len(results['results']) == 0:
         lat = None
         lon = None
         address = one_poc[1]
         found_address = None
+        text = ''
     else:
         answer = results['results'][0]
+        # lat = answer.get('geometry').get('location').get('lat')
+        # lon = answer.get('geometry').get('location').get('lng')
+        # address = one_poc[1]
+        # found_address = answer.get('formatted_address')
+
+        # новий варіант з форматованою адресою
+        address = one_poc[1]
         lat = answer.get('geometry').get('location').get('lat')
         lon = answer.get('geometry').get('location').get('lng')
-        address = one_poc[1]
-        found_address = answer.get('formatted_address')
+        pars = {}
+        text = ''
+        for i in answer.get('address_components'):
+            pars.update({i.get('types')[0]: i.get('long_name')})
+        for key in ['locality', 'route', 'street_number']:
+            if pars.get(key) == None:
+                t = ''
+            else:
+                t = pars.get(key)
+            if t == '':
+                pass
+            else:
+                if key == 'locality':
+                    text = text + t
+                else:
+                    text = text + ', ' + t
 
     res.append(one_poc[0])
     res.append(address)
-    res.append(found_address)
+    # res.append(found_address)
+    res.append(text)
     res.append(lat)
     res.append(lon)
     time.sleep(TIMEOUT)
