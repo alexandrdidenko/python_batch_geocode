@@ -35,7 +35,6 @@ def pars_file(one_poc):
         adr=one_poc[1], apy=API_KEY)
     results = requests.get(geocode_url)
     results = results.json()
-    print(geocode_url)
 
     if len(results['results']) == 0:
         lat = None
